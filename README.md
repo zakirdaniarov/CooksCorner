@@ -36,6 +36,13 @@ source venv/bin/activate
 ```
 3. Add `.env` file to the root and fill with your data next variables:
 ```
+DB_HOST=db
+DB_USER=postgres
+DB_PASSWORD=postgres_password
+DB_NAME=postgres
+DB_PORT=5432
+POSTGRES_HOST_AUTH_METHOD=trust
+DEBUG=True
 EMAIL_HOST_USER = 
 EMAIL_HOST_PASSWORD = 
 ```
