@@ -1,0 +1,740 @@
+openapi: 3.0.3
+info:
+  title: CooksCorner2 Project
+  version: 1.0.0
+  description: CooksCorner2 is an innovative offering designed to provide a convenient
+    and inspiring experience in the world of cooking. Offering a variety of categories
+    including an extensive list of recipes, CooksCorner2 creates a user-friendly platform
+    for culinary enthusiasts.
+paths:
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /recipes/:
+    get:
+      operationId: recipes_retrieve
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeListAPI'
+          description: ''
+  /recipes/{id}/:
+    get:
+      operationId: recipes_retrieve_2
+      description: 'This endpoint allows you to get detailed information about the
+        recipe: name, image,cooker, difficulty, description and ingredients'
+      summary: Displaying detailed information about the recipe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDetailAPI'
+          description: ''
+  /recipes/{id}/like/:
+    post:
+      operationId: recipes_like_create
+      description: This endpoint is used for posting when user likes the recipe
+      summary: Posts when user likes the recipe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /recipes/{id}/save/:
+    post:
+      operationId: recipes_save_create
+      description: This endpoint sends the user info who saved the recipe
+      summary: Posts when user saves recipe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /recipes/{id}/unlike/:
+    post:
+      operationId: recipes_unlike_create
+      description: This endpoint is used for posting when user cancels the like for
+        recipe
+      summary: Posts when user cancels the like for recipe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /recipes/{id}/unsave/:
+    post:
+      operationId: recipes_unsave_create
+      description: This endpoint sends the user cancels the save for the recipe
+      summary: Posts when user cancels the save for the recipe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /recipes/categories/:
+    get:
+      operationId: recipes_categories_retrieve
+      description: This endpoint allows you to get information about various recipe
+        categories
+      summary: Displaying lists of recipe categories
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /recipes/categories/{id}/:
+    get:
+      operationId: recipes_categories_retrieve_2
+      description: This endpoint allows you to get information about recipes in each
+        category
+      summary: Displaying lists of recipes in each category
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - recipes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /recipes/create/:
+    post:
+      operationId: recipes_create_create
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipePostAPI'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RecipePostAPI'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RecipePostAPI'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePostAPI'
+          description: ''
+  /users/email-activate/:
+    get:
+      operationId: users_email_activate_retrieve
+      description: This endpoint allows user to activate their account using the token
+        sent by email
+      summary: Email Verification
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivation'
+          description: ''
+  /users/login/:
+    post:
+      operationId: users_login_create
+      description: This endpoint allows users to post their username and password
+        and get access token for logging in
+      summary: Login
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /users/logout/:
+    post:
+      operationId: users_logout_create
+      description: |-
+        Takes a token and blacklists it. Must be used with the
+        `rest_framework_simplejwt.token_blacklist` app installed.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBlacklist'
+          description: ''
+  /users/profile/{id}/follow/:
+    post:
+      operationId: users_profile_follow_create
+      description: This endpoint sends the user follows another user
+      summary: Posts when user follows another user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /users/profile/{id}/manage/:
+    post:
+      operationId: users_profile_manage_create
+      description: This endpoint allows you to edit and manage your user profile
+      summary: Managing and editing user profile
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /users/profile/{id}/show/:
+    get:
+      operationId: users_profile_show_retrieve
+      description: This endpoint allows you to get detailed information about the
+        profile of the user
+      summary: Displaying profile of the user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /users/register/:
+    post:
+      operationId: users_register_create
+      description: This endpoint allows you to register by providing email, username
+        and password
+      summary: Registration
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+          description: ''
+  /users/token/refresh/:
+    post:
+      operationId: users_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    DifficultyEnum:
+      enum:
+      - Easy
+      - Medium
+      - Hard
+      type: string
+      description: |-
+        * `Easy` - Easy
+        * `Medium` - Medium
+        * `Hard` - Hard
+    Ingredients:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          default: 0
+      required:
+      - id
+      - name
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 255
+          minLength: 5
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 50
+          minLength: 8
+      required:
+      - password
+      - username
+    RecipeDetailAPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        recipe_name:
+          type: string
+          maxLength: 200
+        category:
+          type: array
+          items:
+            type: integer
+        cooking_time:
+          type: string
+          maxLength: 50
+        difficulty:
+          allOf:
+          - $ref: '#/components/schemas/DifficultyEnum'
+          default: Easy
+        cooker:
+          type: integer
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: integer
+        image:
+          type: string
+          format: uri
+          nullable: true
+        is_liked:
+          type: boolean
+          default: false
+        is_saved:
+          type: boolean
+          default: false
+        total_likes:
+          type: string
+          readOnly: true
+          default: 0
+      required:
+      - category
+      - cooker
+      - cooking_time
+      - description
+      - id
+      - ingredients
+      - recipe_name
+      - total_likes
+    RecipeListAPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        recipe_name:
+          type: string
+          maxLength: 200
+        category:
+          type: array
+          items:
+            type: integer
+        cooker:
+          type: integer
+        image:
+          type: string
+          format: uri
+          nullable: true
+        total_likes:
+          type: string
+          readOnly: true
+          default: 0
+        total_saves:
+          type: string
+          readOnly: true
+          default: 0
+      required:
+      - category
+      - cooker
+      - id
+      - recipe_name
+      - total_likes
+      - total_saves
+    RecipePostAPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        recipe_name:
+          type: string
+          maxLength: 200
+        cooking_time:
+          type: string
+          maxLength: 50
+        difficulty:
+          allOf:
+          - $ref: '#/components/schemas/DifficultyEnum'
+          default: Easy
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredients'
+        image:
+          type: string
+          format: uri
+          nullable: true
+        category:
+          type: array
+          items:
+            type: integer
+      required:
+      - category
+      - cooking_time
+      - description
+      - id
+      - ingredients
+      - recipe_name
+    SignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 200
+        username:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 50
+          minLength: 8
+        password_confirm:
+          type: string
+          writeOnly: true
+          maxLength: 50
+          minLength: 8
+      required:
+      - email
+      - password
+      - password_confirm
+      - username
+    TokenBlacklist:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    UserActivation:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 555
+      required:
+      - token
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
