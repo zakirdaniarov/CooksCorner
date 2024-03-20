@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-oltc_g%!u!n70%uui!9&n$67#a^!#opw7x@5xc!=pe$@6iqexw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['152.42.174.83', 'kunasyl-backender.org.kg', '127.0.0.1', 'https://neo-cooks.vercel.app']
+ALLOWED_HOSTS = ['159.223.58.151', 'kunasyl-backender.org.kg', '127.0.0.1', 'https://neo-cooks.vercel.app']
 
 AUTH_USER_MODEL = 'users.User'
 
