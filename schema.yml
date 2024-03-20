@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: CooksCorner2 Project
+  title: CooksCorner Project
   version: 1.0.0
-  description: CooksCorner2 is an innovative offering designed to provide a convenient
+  description: CooksCorner is an innovative offering designed to provide a convenient
     and inspiring experience in the world of cooking. Offering a variety of categories
-    including an extensive list of recipes, CooksCorner2 creates a user-friendly platform
+    including an extensive list of recipes, CooksCorner creates a user-friendly platform
     for culinary enthusiasts.
 paths:
   /api/schema/:
@@ -155,6 +155,9 @@ paths:
   /recipes/:
     get:
       operationId: recipes_retrieve
+      description: This endpoint allows you to get information about total list of
+        recipes
+      summary: Displaying lists of recipes
       tags:
       - recipes
       security:
@@ -303,6 +306,8 @@ paths:
   /recipes/create/:
     post:
       operationId: recipes_create_create
+      description: This endpoint allows you to publish new recipe
+      summary: Publishing new recipe
       tags:
       - recipes
       requestBody:
@@ -326,6 +331,80 @@ paths:
               schema:
                 $ref: '#/components/schemas/RecipePostAPI'
           description: ''
+  /users/:
+    get:
+      operationId: users_retrieve
+      description: This endpoint allows you to get information about total list of
+        users
+      summary: Displaying total list of users
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersListAPI'
+          description: ''
+  /users/{id}/follow/:
+    post:
+      operationId: users_follow_create
+      description: This endpoint is used for posting when the current user follows
+        the another user
+      summary: Posts when current user follows the another user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /users/{id}/show/:
+    get:
+      operationId: users_show_retrieve
+      description: This endpoint allows you to get detailed information about the
+        profile of the users by their id
+      summary: Displaying profile of the chosen user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /users/{id}/unfollow/:
+    post:
+      operationId: users_unfollow_create
+      description: This endpoint is used for posting when the current user unfollows
+        the another user
+      summary: Posts when current user unfollows the another user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
   /users/email-activate/:
     get:
       operationId: users_email_activate_retrieve
@@ -401,17 +480,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenBlacklist'
           description: ''
-  /users/profile/{id}/follow/:
-    post:
-      operationId: users_profile_follow_create
-      description: This endpoint sends the user follows another user
-      summary: Posts when user follows another user
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+  /users/my-page/:
+    get:
+      operationId: users_my_page_retrieve
+      description: This endpoint allows you to get detailed information about the
+        my-page of the user
+      summary: Displaying my-page of the user
       tags:
       - users
       security:
@@ -419,36 +493,11 @@ paths:
       responses:
         '200':
           description: No response body
-  /users/profile/{id}/manage/:
+  /users/my-page/manage/:
     post:
-      operationId: users_profile_manage_create
+      operationId: users_my_page_manage_create
       description: This endpoint allows you to edit and manage your user profile
       summary: Managing and editing user profile
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - users
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          description: No response body
-  /users/profile/{id}/show/:
-    get:
-      operationId: users_profile_show_retrieve
-      description: This endpoint allows you to get detailed information about the
-        profile of the user
-      summary: Displaying profile of the user
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
       tags:
       - users
       security:
@@ -486,6 +535,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/SignUp'
           description: ''
+  /users/resend-activation-email/:
+    post:
+      operationId: users_resend_activation_email_create
+      description: This endpoint allows users to request a new activation email if
+        they didn't receive the initial one.
+      summary: Resend Activation Email
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /users/token/refresh/:
     post:
       operationId: users_token_refresh_create
@@ -525,6 +588,19 @@ components:
         * `Easy` - Easy
         * `Medium` - Medium
         * `Hard` - Hard
+    Ingredient:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          default: '0.00'
+      required:
+      - name
     Ingredients:
       type: object
       properties:
@@ -535,11 +611,10 @@ components:
           type: string
           maxLength: 150
         quantity:
-          type: integer
-          maximum: 9223372036854775807
-          minimum: 0
-          format: int64
-          default: 0
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          default: '0.00'
       required:
       - id
       - name
@@ -585,18 +660,22 @@ components:
         ingredients:
           type: array
           items:
-            type: integer
+            $ref: '#/components/schemas/Ingredient'
         image:
           type: string
           format: uri
           nullable: true
         is_liked:
-          type: boolean
-          default: false
+          type: string
+          readOnly: true
         is_saved:
-          type: boolean
-          default: false
+          type: string
+          readOnly: true
         total_likes:
+          type: string
+          readOnly: true
+          default: 0
+        total_saves:
           type: string
           readOnly: true
           default: 0
@@ -607,8 +686,11 @@ components:
       - description
       - id
       - ingredients
+      - is_liked
+      - is_saved
       - recipe_name
       - total_likes
+      - total_saves
     RecipeListAPI:
       type: object
       properties:
@@ -733,6 +815,25 @@ components:
           maxLength: 555
       required:
       - token
+    UsersListAPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 150
+        bio:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - bio
+      - id
+      - username
   securitySchemes:
     jwtAuth:
       type: http
