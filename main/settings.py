@@ -44,6 +44,8 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://localhost:5173',
                         'http://localhost:8000', 'https://muha-backender.org.kg', 'https://neo-cooks.vercel.app']
 # Application definition
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
