@@ -75,10 +75,6 @@ class RecipePostAPI(serializers.ModelSerializer):
         cooker = self.context['request'].user  # Get the user making the request
 
         recipe = Recipe.objects.create(cooker=cooker, **validated_data)
-
-        for ingredient_data in ingredients_data:
-            Ingredients.objects.create(name=ingredient_data['name'], quantity=ingredient_data['quantity'])
-
         recipe.category.set(category_data)
 
         return recipe
