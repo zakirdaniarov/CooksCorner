@@ -33,6 +33,12 @@ class SignUpSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
+class ResendActivationEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
+
+
 class UserActivationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
 
