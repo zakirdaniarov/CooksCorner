@@ -15,6 +15,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.core.mail import send_mail
 from drf_spectacular.utils import extend_schema
 from django.db.models import Q
+from .utils import send_activation_email
 
 
 class RegisterAPIView(generics.GenericAPIView):
@@ -33,17 +34,30 @@ class RegisterAPIView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relative_link = reverse('email-verification')
-        abs_url = 'http://'+current_site+relative_link+"?token="+str(token)
-        subject = 'Verify your email'
-        message = 'Hi '+user.username + \
-            ' Use the link below to verify your email \n' + abs_url
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [user.email, ]
-        send_mail(subject, message, email_from, recipient_list)
+        if not user.is_verified:
+            send_activation_email(request, user)
         return Response(user_data, status=status.HTTP_201_CREATED)
+
+
+class ResendActivationEmailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+            summary="Resend Activation Email",
+            description="This endpoint allows users to request a new activation email if they didn't receive the initial one.",
+    )
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        if user.is_verified:
+            return Response({"error": "User is already verified."}, status=status.HTTP_400_BAD_REQUEST)
+
+        send_activation_email(request, user)
+        return Response({"message": "Activation email has been resent successfully."}, status=status.HTTP_200_OK)
 
 
 class EmailVerificationAPIView(APIView):
