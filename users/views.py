@@ -1,18 +1,14 @@
 from django.contrib import auth
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
 from rest_framework import generics, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
 from .serializers import SignUpSerializer, UserActivationSerializer, LoginSerializer, UserProfileSerializer, UserManageSerializer
 from .serializers import UsersListAPI
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .models import User
 import jwt
 from django.conf import settings
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.core.mail import send_mail
 from drf_spectacular.utils import extend_schema
 from django.db.models import Q
 from .utils import send_activation_email
