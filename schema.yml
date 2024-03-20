@@ -314,13 +314,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RecipePostAPI'
+              $ref: '#/components/schemas/RecipePostAPIRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/RecipePostAPI'
+              $ref: '#/components/schemas/RecipePostAPIRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/RecipePostAPI'
+              $ref: '#/components/schemas/RecipePostAPIRequest'
         required: true
       security:
       - jwtAuth: []
@@ -435,13 +435,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: '#/components/schemas/LoginRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: '#/components/schemas/LoginRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: '#/components/schemas/LoginRequest'
         required: true
       security:
       - jwtAuth: []
@@ -465,21 +465,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
         required: true
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenBlacklist'
-          description: ''
+          description: No response body
   /users/my-page/:
     get:
       operationId: users_my_page_retrieve
@@ -517,13 +513,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignUpRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignUpRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignUpRequest'
         required: true
       security:
       - jwtAuth: []
@@ -543,12 +539,28 @@ paths:
       summary: Resend Activation Email
       tags:
       - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendActivationEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResendActivationEmailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResendActivationEmailRequest'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendActivationEmail'
+          description: ''
   /users/token/refresh/:
     post:
       operationId: users_token_refresh_create
@@ -561,13 +573,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
         required: true
       responses:
         '200':
@@ -618,6 +630,20 @@ components:
       required:
       - id
       - name
+    IngredientsRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          default: '0.00'
+      required:
+      - name
     Login:
       type: object
       properties:
@@ -625,11 +651,20 @@ components:
           type: string
           maxLength: 255
           minLength: 5
+      required:
+      - username
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 5
+          maxLength: 255
         password:
           type: string
           writeOnly: true
-          maxLength: 50
           minLength: 8
+          maxLength: 50
       required:
       - password
       - username
@@ -762,6 +797,61 @@ components:
       - id
       - ingredients
       - recipe_name
+    RecipePostAPIRequest:
+      type: object
+      properties:
+        recipe_name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        cooking_time:
+          type: string
+          minLength: 1
+          maxLength: 50
+        difficulty:
+          allOf:
+          - $ref: '#/components/schemas/DifficultyEnum'
+          default: Easy
+        description:
+          type: string
+          minLength: 1
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngredientsRequest'
+        image:
+          type: string
+          format: binary
+          nullable: true
+        category:
+          type: array
+          items:
+            type: integer
+      required:
+      - category
+      - cooking_time
+      - description
+      - ingredients
+      - recipe_name
+    ResendActivationEmail:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 200
+      required:
+      - email
+    ResendActivationEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 200
+      required:
+      - email
     SignUp:
       type: object
       properties:
@@ -772,27 +862,43 @@ components:
         username:
           type: string
           maxLength: 150
+      required:
+      - email
+      - username
+    SignUpRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 200
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
         password:
           type: string
           writeOnly: true
-          maxLength: 50
           minLength: 8
+          maxLength: 50
         password_confirm:
           type: string
           writeOnly: true
-          maxLength: 50
           minLength: 8
+          maxLength: 50
       required:
       - email
       - password
       - password_confirm
       - username
-    TokenBlacklist:
+    TokenBlacklistRequest:
       type: object
       properties:
         refresh:
           type: string
           writeOnly: true
+          minLength: 1
       required:
       - refresh
     TokenRefresh:
@@ -801,11 +907,16 @@ components:
         access:
           type: string
           readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
         refresh:
           type: string
           writeOnly: true
+          minLength: 1
       required:
-      - access
       - refresh
     UserActivation:
       type: object

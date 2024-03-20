@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-oltc_g%!u!n70%uui!9&n$67#a^!#opw7x@5xc!=pe$@6iqexw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['152.42.174.83', 'kunasyl-backender.org.kg', '127.0.0.1']
+ALLOWED_HOSTS = ['152.42.174.83', 'kunasyl-backender.org.kg', '127.0.0.1', 'https://neo-cooks.vercel.app']
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -37,10 +37,11 @@ CORS_ALLOWED_ORIGINS = (
     'http://localhost:8000',
     'https://kunasyl-backender.org.kg',
     'http://localhost:5173',
+    'https://neo-cooks.vercel.app'
 )
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://localhost:5173',
-                        'http://localhost:8000', 'https://kunasyl-backender.org.kg',]
+                        'http://localhost:8000', 'https://kunasyl-backender.org.kg', 'https://neo-cooks.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -180,10 +181,32 @@ REST_FRAMEWORK = {
     )
 }
 
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "CooksCorner Project",
     "DESCRIPTION": "CooksCorner is an innovative offering designed to provide a convenient and inspiring experience in the world of cooking. Offering a variety of categories including an extensive list of recipes, CooksCorner creates a user-friendly platform for culinary enthusiasts.",
     "VERSION": "1.0.0",
+    "SWAGGER_UI_SETTINGS": {
+        "filter": True,
+    },
+    "COMPONENT_SPLIT_REQUEST": True,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
 
 SIMPLE_JWT = {
