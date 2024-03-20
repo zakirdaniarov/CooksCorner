@@ -23,6 +23,11 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("This email address is already in use.")
+        return value.lower()
+
     def create(self, validated_data):
         validated_data.pop('password_confirm')
         return User.objects.create_user(**validated_data)
