@@ -182,7 +182,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "CooksCorner Project",
-    "DESCRIPTION": "CooksCorner is an innovative offering designed to provide a convenient and inspiring experience in the world of cooking. Offering a variety of categories including an extensive list of recipes, CooksCorner2 creates a user-friendly platform for culinary enthusiasts.",
+    "DESCRIPTION": "CooksCorner is an innovative offering designed to provide a convenient and inspiring experience in the world of cooking. Offering a variety of categories including an extensive list of recipes, CooksCorner creates a user-friendly platform for culinary enthusiasts.",
     "VERSION": "1.0.0",
 }
 
