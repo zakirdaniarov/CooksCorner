@@ -105,13 +105,18 @@ class RecipePostAPIView(APIView):
             # Process ingredients data
             ingredients_data = request.data.get('ingredients', [])
             for ingredient_data in ingredients_data:
-                # Create or get ingredient object
+                # Retrieve existing ingredient if available
                 ingredient_name = ingredient_data.get('name')
                 ingredient_quantity = ingredient_data.get('quantity', 0)
-                ingredient, created = Ingredients.objects.get_or_create(name=ingredient_name, defaults={'quantity': ingredient_quantity})
+                existing_ingredient = Ingredients.objects.filter(Q(name=ingredient_name) & Q(quantity=ingredient_quantity)).first()
 
-                # Add the ingredient to the recipe
-                recipe.ingredients.add(ingredient)
+                if existing_ingredient:
+                    # Use existing ingredient
+                    recipe.ingredients.add(existing_ingredient)
+                else:
+                    # Create new ingredient if not found
+                    new_ingredient = Ingredients.objects.create(name=ingredient_name, quantity=ingredient_quantity)
+                    recipe.ingredients.add(new_ingredient)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
