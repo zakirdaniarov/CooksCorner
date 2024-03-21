@@ -14,10 +14,11 @@ class RecipeCategories(models.Model):
 
 class Ingredients(models.Model):
     name = models.CharField(max_length=150)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    # quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    quantity = models.CharField(max_length=200)
 
     def __str__(self):
-        return f'{self.name}-{self.quantity}kg'
+        return f'{self.name}-{self.quantity}'
 
 
 class Recipe(models.Model):
