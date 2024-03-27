@@ -5,14 +5,15 @@ from .models import Recipe, RecipeCategories, Like,  Save
 from .serializers import *
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
+from drf_yasg.utils import swagger_auto_schema
 
 
 # Create your views here.
 class RecipeCategoriesListAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Displaying lists of recipe categories",
+    @swagger_auto_schema(
+            operation_summary="Displaying lists of recipe categories",
             description="This endpoint allows you to get information about various recipe categories",
     )
     def get(self, request, *args, **kwargs):
@@ -26,8 +27,8 @@ class CategoryRecipesListAPIView(APIView):
     serializer_class = RecipeCategories
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Displaying lists of recipes in each category",
+    @swagger_auto_schema(
+            operation_summary="Displaying lists of recipes in each category",
             description="This endpoint allows you to get information about recipes in each category",
     )
     def get(self, request, *args, **kwargs):
@@ -41,11 +42,11 @@ class CategoryRecipesListAPIView(APIView):
 class RecipesListAPIView(APIView):
     serializer_class = RecipeListAPI
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Displaying lists of recipes",
+
+    @swagger_auto_schema(
+            operation_summary="Displaying lists of recipes",
             description="This endpoint allows you to get information about total list of recipes",
     )
-
     def get(self, request, *args, **kwargs):
         # Get the search query parameter from the request
         search_query = request.query_params.get('search', None)
@@ -68,8 +69,8 @@ class RecipeInfoAPIView(APIView):
     serializer_class = RecipeDetailAPI
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Displaying detailed information about the recipe",
+    @swagger_auto_schema(
+            operation_summary="Displaying detailed information about the recipe",
             description="This endpoint allows you to get detailed information about the recipe: name, image,"
                         "cooker, difficulty, description and ingredients",
     )
@@ -93,9 +94,11 @@ class RecipeInfoAPIView(APIView):
 class RecipePostAPIView(APIView):
     serializer_class = RecipePostAPI
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Publishing new recipe",
+
+    @swagger_auto_schema(
+            operation_summary="Publishing new recipe",
             description="This endpoint allows you to publish new recipe",
+            request_body=RecipePostAPI
     )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -125,8 +128,8 @@ class RecipePostAPIView(APIView):
 class RecipeLikeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Posts when user likes the recipe",
+    @swagger_auto_schema(
+            operation_summary="Posts when user likes the recipe",
             description="This endpoint is used for posting when user likes the recipe",
     )
     def post(self, request, *args, **kwargs):
@@ -150,8 +153,8 @@ class RecipeLikeAPIView(APIView):
 class RecipeUnlikeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Posts when user cancels the like for recipe",
+    @swagger_auto_schema(
+            operation_summary="Posts when user cancels the like for recipe",
             description="This endpoint is used for posting when user cancels the like for recipe",
     )
     def post(self, request, *args, **kwargs):
@@ -177,8 +180,8 @@ class RecipeUnlikeAPIView(APIView):
 class RecipeSaveAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Posts when user saves recipe",
+    @swagger_auto_schema(
+            operation_summary="Posts when user saves recipe",
             description="This endpoint sends the user info who saved the recipe",
     )
     def post(self, request, *args, **kwargs):
@@ -202,8 +205,8 @@ class RecipeSaveAPIView(APIView):
 class RecipeUnsaveAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-            summary="Posts when user cancels the save for the recipe",
+    @swagger_auto_schema(
+            operation_summary="Posts when user cancels the save for the recipe",
             description="This endpoint sends the user cancels the save for the recipe",
     )
     def post(self, request, *args, **kwargs):
