@@ -12,17 +12,18 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_spectacular.utils import extend_schema
 from django.db.models import Q
 from .utils import send_activation_email
+from drf_yasg.utils import swagger_auto_schema
 
 
 class RegisterAPIView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = [AllowAny]
 
-    @extend_schema(
-            summary="Registration",
-            description="This endpoint allows you to register by providing email, username and password",
+    @swagger_auto_schema(
+        operation_summary="Registration",
+        operation_description="This endpoint allows you to register by providing email, username and password",
+        request_body=SignUpSerializer
     )
-
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
@@ -39,9 +40,10 @@ class ResendActivationEmailAPIView(APIView):
     serializer_class = ResendActivationEmailSerializer
     permission_classes = [AllowAny]
 
-    @extend_schema(
-            summary="Resend Activation Email",
+    @swagger_auto_schema(
+            operation_summary="Resend Activation Email",
             description="This endpoint allows users to request a new activation email if they didn't receive the initial one.",
+            request_body=ResendActivationEmailSerializer
     )
     def post(self, request):
         email = request.data.get('email')
@@ -60,8 +62,8 @@ class ResendActivationEmailAPIView(APIView):
 class EmailVerificationAPIView(APIView):
     serializer_class = UserActivationSerializer
 
-    @extend_schema(
-            summary="Email Verification",
+    @swagger_auto_schema(
+            operation_summary="Email Verification",
             description="This endpoint allows user to activate their account using the token sent by email",
     )
 
@@ -85,9 +87,10 @@ class LoginAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
-    @extend_schema(
-            summary="Login",
+    @swagger_auto_schema(
+            operation_summary="Login",
             description="This endpoint allows users to post their username and password and get access token for logging in",
+            request_body=LoginSerializer
     )
 
     def post(self, request):
@@ -113,8 +116,8 @@ class LoginAPIView(APIView):
 class UsersListAPIView(APIView):
     serializer_class = UsersListAPI
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Displaying total list of users",
+    @swagger_auto_schema(
+            operation_summary="Displaying total list of users",
             description="This endpoint allows you to get information about total list of users",
     )
     def get(self, request, *args, **kwargs):
@@ -138,8 +141,8 @@ class UsersListAPIView(APIView):
 class ProfileShowAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-        summary="Displaying profile of the chosen user",
+    @swagger_auto_schema(
+        operation_summary="Displaying profile of the chosen user",
         description="This endpoint allows you to get detailed information about the profile of the users by their id",
     )
     def get(self, request, *args, **kwargs):
@@ -155,8 +158,8 @@ class ProfileShowAPIView(APIView):
 
 class MyPageShowAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Displaying my-page of the user",
+    @swagger_auto_schema(
+            operation_summary="Displaying my-page of the user",
             description="This endpoint allows you to get detailed information about the my-page of the user",
     )
     def get(self, request, *args, **kwargs):
@@ -172,9 +175,11 @@ class MyPageShowAPIView(APIView):
 
 class MyPageManageAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Managing and editing user profile",
+
+    @swagger_auto_schema(
+            operation_summary="Managing and editing user profile",
             description="This endpoint allows you to edit and manage your user profile",
+            request_body=UserManageSerializer
     )
     def post(self, request, *args, **kwargs):
         try:
@@ -192,8 +197,8 @@ class MyPageManageAPIView(APIView):
 
 class ProfileFollowAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Posts when current user follows the another user",
+    @swagger_auto_schema(
+            operation_summary="Posts when current user follows the another user",
             description="This endpoint is used for posting when the current user follows the another user",
     )
     def post(self, request, *args, **kwargs):
@@ -218,8 +223,8 @@ class ProfileFollowAPIView(APIView):
 
 class ProfileUnfollowAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    @extend_schema(
-            summary="Posts when current user unfollows the another user",
+    @swagger_auto_schema(
+            operation_summary="Posts when current user unfollows the another user",
             description="This endpoint is used for posting when the current user unfollows the another user",
     )
     def post(self, request, *args, **kwargs):
