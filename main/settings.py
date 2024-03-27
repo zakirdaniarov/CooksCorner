@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework_simplejwt.token_blacklist',
-    'drf_spectacular',
+    'drf_yasg',
     "corsheaders",
     'rest_framework',
     'users',
@@ -62,6 +62,16 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage'
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -182,33 +192,6 @@ REST_FRAMEWORK = {
     )
 }
 
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "CooksCorner Project",
-    "DESCRIPTION": "CooksCorner is an innovative offering designed to provide a convenient and inspiring experience in the world of cooking. Offering a variety of categories including an extensive list of recipes, CooksCorner creates a user-friendly platform for culinary enthusiasts.",
-    "VERSION": "1.0.0",
-    "SWAGGER_UI_SETTINGS": {
-        "filter": True,
-    },
-    "COMPONENT_SPLIT_REQUEST": True,
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
-    }
-}
-
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
-    }
-}
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
